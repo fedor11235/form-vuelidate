@@ -15,12 +15,12 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  margin-top: 60px;
-}
+<style lang="sass">
+#app 
+  margin-top: 60px
+
+body 
+  background: #333
+  font-family: 'PT Sans', sans-serif
+  padding: 20px
 </style>
