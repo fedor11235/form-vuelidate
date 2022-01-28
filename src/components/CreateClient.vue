@@ -7,7 +7,7 @@
         v-model.trim="$v.form.lastName.$model"
         placeholder="Фамилия"
       />
-      <div class="error" v-if="lastNameError">
+      <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in lastNameError" :key="index">
           <span>{{ elem }}</span>
         </div>
@@ -21,7 +21,7 @@
         v-model.trim="$v.form.firstName.$model"
         placeholder="Имя"
       />
-      <div class="error" v-if="firstNameError">
+      <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in firstNameError" :key="index">
           <span>{{ elem }}</span>
         </div>
@@ -35,11 +35,6 @@
         v-model.trim="$v.form.patronymic.$model"
         placeholder="Отчество"
       />
-      <div class="error" v-if="patronymicError">
-        <div v-for="(elem, index) in patronymicError" :key="index">
-          <span>{{ elem }}</span>
-        </div>
-      </div>
     </div>
 
     <div>
@@ -49,7 +44,7 @@
         v-model.trim="$v.form.date.$model"
         placeholder="Дата Рождения"
       />
-      <div class="error" v-if="dateError">
+      <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in dateError" :key="index">
           <span>{{ elem }}</span>
         </div>
@@ -63,7 +58,7 @@
         v-model.trim="$v.form.tale.$model"
         placeholder="Номер телефона"
       />
-      <div class="error" v-if="taleError">
+      <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in taleError" :key="index">
           <span>{{ elem }}</span>
         </div>
@@ -81,11 +76,6 @@
         <option>Мужской</option>
         <option>Женский</option>
       </select>
-      <div class="error" v-if="genderError">
-        <div v-for="(elem, index) in genderError" :key="index">
-          <span>{{ elem }}</span>
-        </div>
-      </div>
     </div>
 
     <div class="check">
@@ -100,7 +90,7 @@
         <option>Проблемные</option>
         <option>ОМС</option>
       </select>
-      <div class="error" v-if="clientGroupError">
+      <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in clientGroupError" :key="index">
           <span>{{ elem }}</span>
         </div>
@@ -118,12 +108,6 @@
         <option>Захаров</option>
         <option>Чернышева</option>
       </select>
-
-      <div class="error" v-if="doctorError">
-        <div v-for="(elem, index) in doctorError" :key="index">
-          <span>{{ elem }}</span>
-        </div>
-      </div>
     </div>
 
     <div class="check">
@@ -138,14 +122,14 @@
       </div>
     </div>
 
-    <input type="submit" value="Sign Up" />
+    <input  :disabled="$v.$error && $v.$invalid" type="submit" value="Отправить" @click="onSubmit"/>
   </form>
 </template>
 
 <script>
-// import { required, minLength, between } from "vuelidate/lib/validators";
 import { required, minLength} from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
+import {taleValidator, dateValidator} from "@/functions/validators"
 
 export default {
   name: "CreateClient",
@@ -178,14 +162,19 @@ export default {
         minLength:minLength(2) 
          },
       patronymic: { 
-        required,
         minLength:minLength(2) 
          },
-      date: { required },
-      tale: { required },
-      gender: { required },
+      date: { 
+        required,
+        dateValidator
+        },
+      tale: { 
+        required,
+        taleValidator
+        },
+      gender: { },
       clientGroup: { required },
-      doctor: { required },
+      doctor: {  },
       sms: {  },
     },
   },
@@ -207,7 +196,6 @@ export default {
 
     patronymicError(){
       let errors = [];
-      if(!this.$v.form.patronymic.required) errors.push("Обязательно для заполнения!")
       if(!this.$v.form.patronymic.minLength) errors.push("Не менее двух знаков!")
       return errors
     },
@@ -215,19 +203,14 @@ export default {
     dateError(){
       let errors = [];
       if(!this.$v.form.date.required) errors.push("Обязательно для заполнения!")
-      if(this.$v.form.date.$model > new Date().toISOString().substring(0, 10)) errors.push("Вы указали неверную дату!")
+      if(!this.$v.form.date.dateValidator)  errors.push("Вы указали неверную дату!")
+
       return errors
     },
     taleError(){
       let errors = [];
       if(!this.$v.form.tale.required) errors.push("Обязательно для заполнения!")
-      if(!/^[\d]{11}$/.test(this.$v.form.tale.$model) && !this.$v.form.tale.$model=="") errors.push("Номер указан не верно!")
-      return errors
-    },
-
-    genderError(){
-      let errors = [];
-      if(!this.$v.form.gender.required) errors.push("Обязательно для заполнения!")
+      if(!this.$v.form.tale.taleValidator) errors.push("Номер указан не верно!")
       return errors
     },
 
@@ -236,12 +219,16 @@ export default {
       if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
       return errors
     },
+  },
 
-    doctorError(){
-      let errors = [];
-      if(!this.$v.form.doctor.required) errors.push("Обязательно для заполнения!")
-      return errors
-    },
+  methods: {
+    onSubmit() {
+
+      this.$v.$touch()
+      if (!this.$v.$invalid){
+        alert("Форма успешно отправлена!")
+      }
+    }
   }
 }
 
