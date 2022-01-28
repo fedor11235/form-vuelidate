@@ -437,7 +437,7 @@ form
         outline: 0
 
     .error
-      padding: 20px 20px 20px 5%
+      padding-left: 5%
       color: #999
       color: red
       font-style: italic
