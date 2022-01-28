@@ -253,8 +253,8 @@
 </template>
 
 <script>
-import { required, minLength} from 'vuelidate/lib/validators';
-import { validationMixin } from 'vuelidate';
+import { required, minLength} from 'vuelidate/lib/validators'
+import { validationMixin } from 'vuelidate'
 import {taleValidator, dateValidator} from '@/functions/validators'
 
 
