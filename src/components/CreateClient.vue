@@ -37,12 +37,13 @@
       />
     </div>
 
-    <div>
+    <div class="check">
+      <label>Дата Рождения:</label>
       <input
         type="date"
         name="date"
+        class="select__input"
         v-model.trim="$v.form.date.$model"
-        placeholder="Дата Рождения"
       />
       <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in dateError" :key="index">
@@ -51,10 +52,12 @@
       </div>
     </div>
 
-    <div>
+    <div class="check">
+      <label>Номер телефона с 7:</label>
       <input
         type="tale"
         name="tale"
+        class="select__input"
         v-model.trim="$v.form.tale.$model"
         placeholder="Номер телефона"
       />
@@ -114,7 +117,6 @@
       <label>Не отправлять СМС:</label>
       <div class="select__input">
         <input
-          
           type="checkbox"
           name="sms"
           v-model.trim="$v.form.sms.$model"
@@ -186,13 +188,17 @@
 
     <br>
 
-    <div>
-      <input
-        type="text"
+    <div class="check">
+      <label>Тип документа:</label>
+      <select
+        class="select__input"
         name="typeDocument"
         v-model.trim="$v.form.typeDocument.$model"
-        placeholder="Тип документа"
-      />
+      >
+        <option>Паспорт</option>
+        <option>Свидетельство о рождении</option>
+        <option>Вод. удостоверение</option>
+      </select>
       <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in typeDocumentError" :key="index">
           <span>{{ elem }}</span>
@@ -227,12 +233,13 @@
       />
     </div>
 
-    <div>
+    <div class="check">
+      <label>Дата выдачи:</label>
       <input
-        type="text"
+        type="date"
         name="dateIssue"
+        class="select__input"
         v-model.trim="$v.form.dateIssue.$model"
-        placeholder="Дата выдачи"
       />
       <div class="error" v-if="$v.$error && $v.$invalid">
         <div v-for="(elem, index) in dateIssueError" :key="index">
@@ -246,42 +253,40 @@
 </template>
 
 <script>
-import { required, minLength} from "vuelidate/lib/validators";
-import { validationMixin } from "vuelidate";
-import {taleValidator, dateValidator} from "@/functions/validators"
+import { required, minLength} from 'vuelidate/lib/validators';
+import { validationMixin } from 'vuelidate';
+import {taleValidator, dateValidator} from '@/functions/validators'
 
 
 export default {
-  name: "CreateClient",
+  name: 'CreateClient',
   mixins: [validationMixin],
-
 
   data() {
     return {
       form: {
-        lastName: "",
-        firstName: "",
-        patronymic: "",
-        date: "",
-        tale: "",
-        gender: "",
+        lastName: '',
+        firstName: '',
+        patronymic: '',
+        date: '',
+        tale: '',
+        gender: '',
         clientGroup: [],
-        doctor: "",
+        doctor: '',
         sms: false,
 
+        index: '',
+        country: '',
+        region: '',
+        city: '',
+        street: '',
+        home: '',
 
-        index:"",
-        country:"",
-        region:"",
-        city:"",
-        street:"",
-        home:"",
-
-        typeDocument:"",
-        documentSeries:"",
-        documentNumber:"",
-        IssuedBy:"",
-        dateIssue:""
+        typeDocument: '',
+        documentSeries: '',
+        documentNumber: '',
+        IssuedBy: '',
+        dateIssue: ''
       }
     }
   },
@@ -322,65 +327,68 @@ export default {
       documentSeries:{},
       documentNumber:{},
       IssuedBy:{},
-      dateIssue:{ required }
+      dateIssue:{ 
+        required,
+        dateValidator 
+      }
     },
   },
   computed: {
     lastNameError(){
       let errors = [];
-      if(!this.$v.form.lastName.required) errors.push("Обязательно для заполнения!")
-      if(!this.$v.form.lastName.minLength) errors.push("Не менее двух знаков!")
+      if(!this.$v.form.lastName.required) errors.push('Обязательно для заполнения!')
+      if(!this.$v.form.lastName.minLength) errors.push('Не менее двух знаков!')
       return errors
       
     },
     firstNameError(){
       let errors = [];
-      if(!this.$v.form.firstName.required) errors.push("Обязательно для заполнения!")
-      if(!this.$v.form.firstName.minLength) errors.push("Не менее двух знаков!")
+      if(!this.$v.form.firstName.required) errors.push('Обязательно для заполнения!')
+      if(!this.$v.form.firstName.minLength) errors.push('Не менее двух знаков!')
       return errors
     },
 
     patronymicError(){
       let errors = [];
-      if(!this.$v.form.patronymic.minLength) errors.push("Не менее двух знаков!")
+      if(!this.$v.form.patronymic.minLength) errors.push('Не менее двух знаков!')
       return errors
     },
 
     dateError(){
       let errors = [];
-      if(!this.$v.form.date.required) errors.push("Обязательно для заполнения!")
-      if(!this.$v.form.date.dateValidator)  errors.push("Вы указали неверную дату!")
+      if(!this.$v.form.date.required) errors.push('Обязательно для заполнения!')
+      if(!this.$v.form.date.dateValidator)  errors.push('Вы указали неверную дату!')
 
       return errors
     },
     taleError(){
       let errors = [];
-      if(!this.$v.form.tale.required) errors.push("Обязательно для заполнения!")
-      if(!this.$v.form.tale.taleValidator) errors.push("Номер указан не верно!")
+      if(!this.$v.form.tale.required) errors.push('Обязательно для заполнения!')
+      if(!this.$v.form.tale.taleValidator) errors.push('Номер указан не верно!')
       return errors
     },
 
     clientGroupError(){
       let errors = [];
-      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      if(!this.$v.form.clientGroup.required) errors.push('Обязательно для заполнения!')
       return errors
     },
 
     cityError(){
       let errors = [];
-      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      if(!this.$v.form.city.required) errors.push('Обязательно для заполнения!')
       return errors
     },
 
     typeDocumentError(){
       let errors = [];
-      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      if(!this.$v.form.typeDocument.required) errors.push('Обязательно для заполнения!')
       return errors
     },
 
     dateIssueError(){
       let errors = [];
-      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      if(!this.$v.form.dateIssue.dateValidator) errors.push('Вы указали неверную дату!')
       return errors
     },
 
@@ -390,7 +398,7 @@ export default {
 
       this.$v.$touch()
       if (!this.$v.$invalid){
-        alert("Форма успешно отправлена!")
+        alert('Форма успешно отправлена!')
       }
     }
   }
@@ -408,88 +416,53 @@ form
 
     > label
       float: left
-      padding: 20px 20px 20px 50px
+      padding: 20px 20px 20px 5%
       opacity: 0.8
-      width: 60%
+      font-size: 1rem
+      width: 50%
       font-weight: bold
       top: 22px
       left: 20px
 
     > input,
     textarea
-      font-size: 1.2rem
-      opacity: 0.8
+      font-size: 1rem
 
     > input
       width: 100%
       border: 0
-      padding: 20px 20px 20px 50px
-      background: #eee
+      padding: 5%
 
       &:focus
         outline: 0
-        background: white
-
-        & + label
-          opacity: 0
-
-      &:valid
-        background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/check.svg)
-        background-size: 20px
-        background-repeat: no-repeat
-        background-position: 20px 20px
-        & + label
-          opacity: 0
-
-      &:invalid:not(:focus):not(:placeholder-shown)
-        background: pink
-        & + label
-          opacity: 0
-
-      &:invalid:focus:not(:placeholder-shown)
-        & ~ .error
-          max-height: 200px
-          padding: 0 30px 20px 50px
 
     .error
-      padding: 0 30px 0 50px
+      padding: 20px 20px 20px 5%
       color: #999
-      transition: 0.28s
       color: red
       font-style: italic
 
   input[type="submit"]
-    display: block
     width: 100%
     margin: 20px 0
     background: #41D873
     color: white
     border: 0
     padding: 20px
-    font-size: 1.2rem
+    font-size: 1rem
 
   .check
-    background: white
-
-    > .error
-
-      bottom: 0
-      left: 0
-
     >.select__input
       display: inline-block
       position: relative
-      width: 35%
+      width: 45%
       height: 60px
       border: none
+      padding: 0
+      font-size: 1rem
 
       &:focus
         outline: none
-
-    >.select__input,
-    textarea
-      opacity: 0.8
-      font-size: 1.2rem
 
     .select__input
       >input
@@ -509,4 +482,5 @@ form
 
 *
   box-sizing: border-box
+
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <CreateClient></CreateClient>
+    <CreateClient/>
   </div>
 </template>
 
