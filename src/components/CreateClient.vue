@@ -122,6 +122,125 @@
       </div>
     </div>
 
+    <br>
+
+    <div>
+      <input
+        type="text"
+        name="index"
+        v-model.trim="$v.form.index.$model"
+        placeholder="Индекс"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="country"
+        v-model.trim="$v.form.country.$model"
+        placeholder="Страна"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="region"
+        v-model.trim="$v.form.region.$model"
+        placeholder="Регион"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="city"
+        v-model.trim="$v.form.city.$model"
+        place
+        placeholder="Город"
+      />
+      <div class="error" v-if="$v.$error && $v.$invalid">
+        <div v-for="(elem, index) in cityError" :key="index">
+          <span>{{ elem }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="street"
+        v-model.trim="$v.form.street.$model"
+        placeholder="Улица"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="home"
+        v-model.trim="$v.form.home.$model"
+        placeholder="Дом"
+      />
+    </div>
+
+    <br>
+
+    <div>
+      <input
+        type="text"
+        name="typeDocument"
+        v-model.trim="$v.form.typeDocument.$model"
+        placeholder="Тип документа"
+      />
+      <div class="error" v-if="$v.$error && $v.$invalid">
+        <div v-for="(elem, index) in typeDocumentError" :key="index">
+          <span>{{ elem }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="documentSeries"
+        v-model.trim="$v.form.documentSeries.$model"
+        placeholder="Серия"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="documentNumber"
+        v-model.trim="$v.form.documentNumber.$model"
+        placeholder="Номер"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="IssuedBy"
+        v-model.trim="$v.form.IssuedBy.$model"
+        placeholder="Кем выдан"
+      />
+    </div>
+
+    <div>
+      <input
+        type="text"
+        name="dateIssue"
+        v-model.trim="$v.form.dateIssue.$model"
+        placeholder="Дата выдачи"
+      />
+      <div class="error" v-if="$v.$error && $v.$invalid">
+        <div v-for="(elem, index) in dateIssueError" :key="index">
+          <span>{{ elem }}</span>
+        </div>
+      </div>
+    </div>
+
     <input  :disabled="$v.$error && $v.$invalid" type="submit" value="Отправить" @click="onSubmit"/>
   </form>
 </template>
@@ -130,6 +249,7 @@
 import { required, minLength} from "vuelidate/lib/validators";
 import { validationMixin } from "vuelidate";
 import {taleValidator, dateValidator} from "@/functions/validators"
+
 
 export default {
   name: "CreateClient",
@@ -148,6 +268,20 @@ export default {
         clientGroup: [],
         doctor: "",
         sms: false,
+
+
+        index:"",
+        country:"",
+        region:"",
+        city:"",
+        street:"",
+        home:"",
+
+        typeDocument:"",
+        documentSeries:"",
+        documentNumber:"",
+        IssuedBy:"",
+        dateIssue:""
       }
     }
   },
@@ -176,9 +310,21 @@ export default {
       clientGroup: { required },
       doctor: {  },
       sms: {  },
+
+      index:{},
+      country:{},
+      region:{},
+      city:{ required },
+      street:{},
+      home:{},
+
+      typeDocument:{ required },
+      documentSeries:{},
+      documentNumber:{},
+      IssuedBy:{},
+      dateIssue:{ required }
     },
   },
-
   computed: {
     lastNameError(){
       let errors = [];
@@ -219,8 +365,26 @@ export default {
       if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
       return errors
     },
-  },
 
+    cityError(){
+      let errors = [];
+      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      return errors
+    },
+
+    typeDocumentError(){
+      let errors = [];
+      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      return errors
+    },
+
+    dateIssueError(){
+      let errors = [];
+      if(!this.$v.form.clientGroup.required) errors.push("Обязательно для заполнения!")
+      return errors
+    },
+
+  },
   methods: {
     onSubmit() {
 
@@ -231,7 +395,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="sass" scoped>
